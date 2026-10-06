@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOGIX - Sistema de Controle Logístico Matriz</title>
+    <!-- CSS Externos -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa-solid fa-truck-fast logo-icon"></i>
+                <div class="logo-text">
+                    <h2>G7y</h2>
+                    <span>Controle Matriz</span>
+                </div>
+            </div>
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="active" data-page="dashboard">
+                        <a href="#"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li data-page="nova-transferencia">
+                        <a href="#"><i class="fa-solid fa-circle-plus"></i> <span>Nova Transferência</span></a>
+                    </li>
+                    <li data-page="transferencias">
+                        <a href="#"><i class="fa-solid fa-boxes-packing"></i> <span>Transferências</span></a>
+                    </li>
+                    <li data-page="motoristas">
+                        <a href="#"><i class="fa-solid fa-id-card"></i> <span>Motoristas</span></a>
+                    </li>
+                    <li data-page="destinos">
+                        <a href="#"><i class="fa-solid fa-warehouse"></i> <span>Destinos</span></a>
+                    </li>
+                    <li data-page="relatorios">
+                        <a href="#"><i class="fa-solid fa-file-invoice-dollar"></i> <span>Relatórios</span></a>
+                    </li>
+                    <li data-page="configuracoes">
+                        <a href="#"><i class="fa-solid fa-gear"></i> <span>Configurações</span></a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <div>
+                        <p class="user-name">Operador Matriz</p>
+                        <p class="user-role">Logística Central</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <button id="sidebar-toggle" class="btn-icon"><i class="fa-solid fa-bars"></i></button>
+                <div class="topbar-title">
+                    <h1 id="page-title">Dashboard Principal</h1>
+                    <span id="current-date"></span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="btn btn-primary" onclick="navigateTo('nova-transferencia')">
+                        <i class="fa-solid fa-plus"></i> Nova Transferência
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <section id="page-dashboard" class="page-section active">
+                    <div class="metrics-grid">
+                        <div class="card metric-card">
+                            <div class="metric-icon bg-blue"><i class="fa-solid fa-dolly"></i></div>
+                            <div class="metric-info">
+                                <h3>Total de Transferências</h3>
+                                <p class="metric-value" id="dash-total-transferencias">0</p>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-icon bg-green"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                            <div class="metric-info">
+                                <h3>Total Transportado (R$)</h3>
+                                <p class="metric-value" id="dash-total-mercadoria">R$ 0,00</p>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-icon bg-orange"><i class="fa-solid fa-truck-moving"></i></div>
+                            <div class="metric-info">
+                                <h3>Total Gasto com Fretes</h3>
+                                <p class="metric-value" id="dash-total-frete">R$ 0,00</p>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-icon bg-purple"><i class="fa-solid fa-percent"></i></div>
+                            <div class="metric-info">
+                                <h3>% Frete / Mercadoria</h3>
+                                <p class="metric-value" id="dash-percentual-frete">0,00%</p>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-icon bg-teal"><i class="fa-solid fa-calculator"></i></div>
+                            <div class="metric-info">
+                                <h3>Custo Médio / Viagem</h3>
+                                <p class="metric-value" id="dash-custo-medio">R$ 0,00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="destinos-summary-grid">
+                        <div class="card destino-card border-rio-preto">
+                            <div class="destino-header">
+                                <h2><i class="fa-solid fa-location-dot"></i> São José do Rio Preto</h2>
+                                <span class="badge badge-blue" id="dash-sjrp-qtd">0 viagens</span>
+                            </div>
+                            <div class="destino-body">
+                                <div><span>Valor Transportado:</span> <strong id="dash-sjrp-valor">R$ 0,00</strong></div>
+                                <div><span>Total Fretes:</span> <strong id="dash-sjrp-frete">R$ 0,00</strong></div>
+                            </div>
+                        </div>
+                        <div class="card destino-card border-jardinopolis">
+                            <div class="destino-header">
+                                <h2><i class="fa-solid fa-location-dot"></i> Jardinópolis</h2>
+                                <span class="badge badge-purple" id="dash-jard-qtd">0 viagens</span>
+                            </div>
+                            <div class="destino-body">
+                                <div><span>Valor Transportado:</span> <strong id="dash-jard-valor">R$ 0,00</strong></div>
+                                <div><span>Total Fretes:</span> <strong id="dash-jard-frete">R$ 0,00</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="charts-grid">
+                        <div class="card chart-card">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Transferências por Destino</h3>
+                            <div class="chart-container"><canvas id="chartDestinos"></canvas></div>
+                        </div>
+                        <div class="card chart-card">
+                            <h3><i class="fa-solid fa-chart-column"></i> Comparativo de Gastos com Frete</h3>
+                            <div class="chart-container"><canvas id="chartComparativo"></canvas></div>
+                        </div>
+                        <div class="card chart-card full-width">
+                            <h3><i class="fa-solid fa-chart-line"></i> Histórico de Valor Transportado e Fretes (Por Mês)</h3>
+                            <div class="chart-container"><canvas id="chartEvolucao"></canvas></div>
+                        </div>
+                        <div class="card chart-card full-width">
+                            <h3><i class="fa-solid fa-user-ninja"></i> Gastos com Frete por Motorista</h3>
+                            <div class="chart-container"><canvas id="chartMotoristas"></canvas></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. NOVA TRANSFERÊNCIA -->
+                <section id="page-nova-transferencia" class="page-section">
+                    <div class="card form-card">
+                        <h2 class="card-title"><i class="fa-solid fa-truck-ramp-box"></i> Registrar Transferência da MATRIZ</h2>
+                        <form id="form-transferencia">
+                            <input type="hidden" id="transf-id-edit">
+                            
+                            <div class="form-section-title">1. Informações da Transferência</div>
+                            <div class="form-row">
+                                <div class="form-group col-3">
+                                    <label>Código ID</label>
+                                    <input type="text" id="transf-codigo" readonly class="input-readonly" value="Auto-gerado">
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="transf-data">Data da Transferência *</label>
+                                    <input type="date" id="transf-data" required>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="transf-hora">Horário de Saída *</label>
+                                    <input type="time" id="transf-hora" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label>Origem</label>
+                                    <input type="text" value="MATRIZ" readonly class="input-readonly">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label for="transf-destino">Destino *</label>
+                                    <select id="transf-destino" required>
+                                        <option value="">Selecione o destino</option>
+                                        <option value="São José do Rio Preto">São José do Rio Preto</option>
+                                        <option value="Jardinópolis">Jardinópolis</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">2. Valor Financeiro da Carga (Sem Detalhar Produtos)</div>
+                            <div class="form-row">
+                                <div class="form-group col-12">
+                                    <label for="transf-valor-mercadoria">Valor Total da Mercadoria Transportada (R$) *</label>
+                                    <div class="input-prefix">
+                                        <span>R$</span>
+                                        <input type="number" step="0.01" min="0" id="transf-valor-mercadoria" placeholder="Ex: 85450.00" required>
+                                    </div>
+                                    <small class="help-text">Registre apenas o valor financeiro acumulado das mercadorias enviadas.</small>
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">3. Motorista Responsável e Transporte</div>
+                            <div class="form-row">
+                                <div class="form-group col-6">
+                                    <label for="transf-motorista-select">Motorista Responsável *</label>
+                                    <select id="transf-motorista-select" required>
+                                        <option value="">Selecione um motorista cadastrado</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="transf-veiculo">Veículo Utilizado</label>
+                                    <input type="text" id="transf-veiculo" placeholder="Ex: Truck, Scania 113">
+                                </div>
+                                <div class="form-group col-3">
+                                    <label for="transf-placa">Placa do Veículo</label>
+                                    <input type="text" id="transf-placa" placeholder="Ex: ABC-1234">
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">4. Frete e Custos</div>
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <label for="transf-valor-frete">Valor do Frete Pago (R$) *</label>
+                                    <div class="input-prefix">
+                                        <span>R$</span>
+                                        <input type="number" step="0.01" min="0" id="transf-valor-frete" placeholder="Ex: 2500.00" required>
+                                    </div>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="transf-forma-pagamento">Forma de Pagamento</label>
+                                    <select id="transf-forma-pagamento">
+                                        <option value="PIX">PIX</option>
+                                        <option value="Transferência Bancária">Transferência Bancária</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Boleto">Boleto</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-4">
+                                    <label for="transf-status-pagamento">Status do Pagamento *</label>
+                                    <select id="transf-status-pagamento" required>
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Pago">Pago</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-4">
+                                    <label for="transf-data-pagamento">Data do Pagamento</label>
+                                    <input type="date" id="transf-data-pagamento">
+                                </div>
+                                <div class="form-group col-8">
+                                    <label for="transf-observacoes">Observações Gerais</label>
+                                    <input type="text" id="transf-observacoes" placeholder="Observações sobre carga, frete ou rota">
+                                </div>
+                            </div>
+
+                            <!-- Cálculo Automático em Tempo Real -->
+                            <div class="calculation-box">
+                                <h4><i class="fa-solid fa-calculator"></i> Resumo Financeiro da Operação</h4>
+                                <div class="calc-grid">
+                                    <div><span>Valor Carga:</span> <strong id="calc-val-mercadoria">R$ 0,00</strong></div>
+                                    <div><span>Valor Frete:</span> <strong id="calc-val-frete">R$ 0,00</strong></div>
+                                    <div><span>Custo Frete (%):</span> <strong id="calc-percentual">0.00%</strong></div>
+                                    <div><span>Valor Líquido Operacional:</span> <strong id="calc-liquido">R$ 0,00</strong></div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" onclick="resetFormTransferencia()">Limpar</button>
+                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Salvar Transferência</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- 3. HISTÓRICO DE TRANSFERÊNCIAS -->
+                <section id="page-transferencias" class="page-section">
+                    <div class="card">
+                        <div class="card-header-flex">
+                            <h2><i class="fa-solid fa-list-check"></i> Histórico Completo de Transferências</h2>
+                            <button class="btn btn-primary" onclick="navigateTo('nova-transferencia')"><i class="fa-solid fa-plus"></i> Nova</button>
+                        </div>
+                        
+                        <!-- Filtros Avançados -->
+                        <div class="filters-panel">
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <input type="text" id="filter-search" placeholder="Buscar por ID, placa ou obs..." oninput="filtrarTransferencias()">
+                                </div>
+                                <div class="filter-group">
+                                    <select id="filter-destino" onchange="filtrarTransferencias()">
+                                        <option value="">Todos os Destinos</option>
+                                        <option value="São José do Rio Preto">São José do Rio Preto</option>
+                                        <option value="Jardinópolis">Jardinópolis</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <select id="filter-motorista" onchange="filtrarTransferencias()">
+                                        <option value="">Todos os Motoristas</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <select id="filter-status-pagamento" onchange="filtrarTransferencias()">
+                                        <option value="">Todos os Status</option>
+                                        <option value="Pago">Pago</option>
+                                        <option value="Pendente">Pendente</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <label>Data Inicial:</label>
+                                    <input type="date" id="filter-data-inicio" onchange="filtrarTransferencias()">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Data Final:</label>
+                                    <input type="date" id="filter-data-fim" onchange="filtrarTransferencias()">
+                                </div>
+                                <div class="filter-group">
+                                    <button class="btn btn-secondary btn-sm" onclick="limparFiltros()"><i class="fa-solid fa-filter-circle-xmark"></i> Limpar Filtros</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de Transferências -->
+                        <div class="table-responsive">
+                            <table class="data-table" id="table-transferencias">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Data / Hora</th>
+                                        <th>Origem</th>
+                                        <th>Destino</th>
+                                        <th>Motorista</th>
+                                        <th>Veículo / Placa</th>
+                                        <th>Valor Mercadoria</th>
+                                        <th>Valor Frete</th>
+                                        <th>Status Frete</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Preenchido via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. CONTROLE DE MOTORISTAS -->
+                <section id="page-motoristas" class="page-section">
+                    <div class="grid-2-cols">
+                        <!-- Formulário de Cadastro de Motorista -->
+                        <div class="card">
+                            <h2><i class="fa-solid fa-user-plus"></i> Cadastrar / Editar Motorista</h2>
+                            <form id="form-motorista">
+                                <input type="hidden" id="moto-id-edit">
+                                <div class="form-group">
+                                    <label for="moto-nome">Nome Completo *</label>
+                                    <input type="text" id="moto-nome" required placeholder="Ex: Carlos Eduardo Silva">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="moto-cpf">CPF</label>
+                                        <input type="text" id="moto-cpf" placeholder="000.000.000-00">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="moto-telefone">Telefone</label>
+                                        <input type="text" id="moto-telefone" placeholder="(17) 99999-0000">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-6">
+                                        <label for="moto-tipo-veiculo">Tipo de Veículo Principal</label>
+                                        <input type="text" id="moto-tipo-veiculo" placeholder="Ex: Truck Carreta">
+                                    </div>
+                                    <div class="form-group col-6">
+                                        <label for="moto-placa">Placa Padrão</label>
+                                        <input type="text" id="moto-placa" placeholder="Ex: ABC-1234">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="moto-status">Status</label>
+                                    <select id="moto-status">
+                                        <option value="Ativo">Ativo</option>
+                                        <option value="Inativo">Inativo</option>
+                                    </select>
+                                </div>
+                                <div class="form-actions">
+                                    <button type="button" class="btn btn-secondary" onclick="resetFormMotorista()">Cancelar</button>
+                                    <button type="submit" class="btn btn-primary"><i class="fa-solid fa-save"></i> Salvar Motorista</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Lista de Motoristas Cadastrados -->
+                        <div class="card">
+                            <h2><i class="fa-solid fa-users"></i> Motoristas Cadastrados</h2>
+                            <div class="table-responsive">
+                                <table class="data-table" id="table-motoristas">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Veículo / Placa</th>
+                                            <th>Status</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Preenchido via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Detalhes do Motorista Selecionado -->
+                    <div class="card margin-top" id="card-detalhes-motorista" style="display:none;">
+                        <div class="card-header-flex">
+                            <h2 id="detalhe-moto-nome"><i class="fa-solid fa-id-card"></i> Detalhes do Motorista</h2>
+                            <button class="btn btn-secondary btn-sm" onclick="fecharDetalhesMotorista()">Fechar</button>
+                        </div>
+                        <div class="metrics-grid">
+                            <div class="card metric-card">
+                                <div class="metric-info">
+                                    <h3>Total Viagens</h3>
+                                    <p class="metric-value" id="detalhe-moto-qtd">0</p>
+                                </div>
+                            </div>
+                            <div class="card metric-card">
+                                <div class="metric-info">
+                                    <h3>Total Mercadoria</h3>
+                                    <p class="metric-value" id="detalhe-moto-mercadoria">R$ 0,00</p>
+                                </div>
+                            </div>
+                            <div class="card metric-card">
+                                <div class="metric-info">
+                                    <h3>Total Recebido em Fretes</h3>
+                                    <p class="metric-value" id="detalhe-moto-frete">R$ 0,00</p>
+                                </div>
+                            </div>
+                            <div class="card metric-card">
+                                <div class="metric-info">
+                                    <h3>Média por Viagem</h3>
+                                    <p class="metric-value" id="detalhe-moto-media">R$ 0,00</p>
+                                </div>
+                            </div>
+                            <div class="card metric-card">
+                                <div class="metric-info">
+                                    <h3>Destino mais Frequente</h3>
+                                    <p class="metric-value" id="detalhe-moto-frequente">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>Histórico de Viagens do Motorista</h3>
+                        <div class="table-responsive">
+                            <table class="data-table" id="table-historico-motorista">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Data</th>
+                                        <th>Destino</th>
+                                        <th>Valor Carga</th>
+                                        <th>Valor Frete</th>
+                                        <th>Status Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. CONTROLE POR DESTINO -->
+                <section id="page-destinos" class="page-section">
+                    <div class="grid-2-cols">
+                        <!-- Galpão 1: São José do Rio Preto -->
+                        <div class="card destino-panel border-rio-preto">
+                            <div class="panel-header">
+                                <i class="fa-solid fa-warehouse"></i>
+                                <div>
+                                    <h2>São José do Rio Preto</h2>
+                                    <span>Galpão Regional SJRP</span>
+                                </div>
+                            </div>
+                            <div class="panel-stats">
+                                <div class="stat-item">
+                                    <span>Transferências Realizadas</span>
+                                    <strong id="dest-sjrp-qtd">0</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Valor Total de Mercadorias</span>
+                                    <strong id="dest-sjrp-mercadoria">R$ 0,00</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Total Gasto com Fretes</span>
+                                    <strong id="dest-sjrp-fretes">R$ 0,00</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Custo Médio / Transferência</span>
+                                    <strong id="dest-sjrp-media">R$ 0,00</strong>
+                                </div>
+                            </div>
+                            <div class="top-motoristas-box">
+                                <h4><i class="fa-solid fa-trophy"></i> Principal Motorista para este Destino:</h4>
+                                <p id="dest-sjrp-top-motorista">-</p>
+                            </div>
+                        </div>
+
+                        <!-- Galpão 2: Jardinópolis -->
+                        <div class="card destino-panel border-jardinopolis">
+                            <div class="panel-header">
+                                <i class="fa-solid fa-warehouse"></i>
+                                <div>
+                                    <h2>Jardinópolis</h2>
+                                    <span>Galpão Regional Jardinópolis</span>
+                                </div>
+                            </div>
+                            <div class="panel-stats">
+                                <div class="stat-item">
+                                    <span>Transferências Realizadas</span>
+                                    <strong id="dest-jard-qtd">0</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Valor Total de Mercadorias</span>
+                                    <strong id="dest-jard-mercadoria">R$ 0,00</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Total Gasto com Fretes</span>
+                                    <strong id="dest-jard-fretes">R$ 0,00</strong>
+                                </div>
+                                <div class="stat-item">
+                                    <span>Custo Médio / Transferência</span>
+                                    <strong id="dest-jard-media">R$ 0,00</strong>
+                                </div>
+                            </div>
+                            <div class="top-motoristas-box">
+                                <h4><i class="fa-solid fa-trophy"></i> Principal Motorista para este Destino:</h4>
+                                <p id="dest-jard-top-motorista">-</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gráficos Comparativos de Destino -->
+                    <div class="card margin-top">
+                        <h3><i class="fa-solid fa-code-compare"></i> Comparativo Direto entre Galpões</h3>
+                        <div class="charts-grid">
+                            <div class="chart-container"><canvas id="chartDestinosValores"></canvas></div>
+                            <div class="chart-container"><canvas id="chartDestinosFretes"></canvas></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. RELATÓRIOS -->
+                <section id="page-relatorios" class="page-section">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-file-invoice"></i> Geração de Relatórios Gerenciais</h2>
+                        <div class="filters-panel">
+                            <div class="filter-row">
+                                <div class="filter-group">
+                                    <label for="rel-data-inicio">Data Início</label>
+                                    <input type="date" id="rel-data-inicio">
+                                </div>
+                                <div class="filter-group">
+                                    <label for="rel-data-fim">Data Fim</label>
+                                    <input type="date" id="rel-data-fim">
+                                </div>
+                                <div class="filter-group">
+                                    <label for="rel-destino">Destino</label>
+                                    <select id="rel-destino">
+                                        <option value="">Todos</option>
+                                        <option value="São José do Rio Preto">São José do Rio Preto</option>
+                                        <option value="Jardinópolis">Jardinópolis</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label for="rel-motorista">Motorista</label>
+                                    <select id="rel-motorista">
+                                        <option value="">Todos</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-row">
+                                <button class="btn btn-primary" onclick="gerarRelatorio()"><i class="fa-solid fa-magnifying-glass"></i> Gerar Relatório</button>
+                                <button class="btn btn-secondary" onclick="imprimirRelatorio()"><i class="fa-solid fa-print"></i> Imprimir</button>
+                                <button class="btn btn-excel" onclick="exportarExcel()"><i class="fa-solid fa-file-excel"></i> Exportar para Excel (CSV)</button>
+                            </div>
+                        </div>
+
+                        <!-- Área de Exibição de Relatório para Impressão -->
+                        <div id="printable-area" class="report-print-box">
+                            <div class="report-header">
+                                <h2>LOGIX TRANSPORTES - RELATÓRIO OPERACIONAL MATRIZ</h2>
+                                <p id="report-periodo-text">Período: Completo</p>
+                                <hr>
+                            </div>
+                            <div class="metrics-grid">
+                                <div><strong>Qtd Transferências:</strong> <span id="rel-total-transf">0</span></div>
+                                <div><strong>Total Carga:</strong> <span id="rel-total-carga">R$ 0,00</span></div>
+                                <div><strong>Total Fretes:</strong> <span id="rel-total-frete">R$ 0,00</span></div>
+                                <div><strong>% Frete:</strong> <span id="rel-percentual">0%</span></div>
+                            </div>
+                            <br>
+                            <table class="data-table" id="table-relatorio">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Data</th>
+                                        <th>Destino</th>
+                                        <th>Motorista</th>
+                                        <th>Veículo/Placa</th>
+                                        <th>Valor Mercadoria</th>
+                                        <th>Valor Frete</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. CONFIGURAÇÕES -->
+                <section id="page-configuracoes" class="page-section">
+                    <div class="card">
+                        <h2><i class="fa-solid fa-gears"></i> Configurações do Sistema e Dados</h2>
+                        <p>Gestão do banco de dados local do navegador (LocalStorage).</p>
+                        <hr>
+                        <div class="config-actions">
+                            <button class="btn btn-secondary" onclick="carregarDadosExemplo()"><i class="fa-solid fa-database"></i> Carregar Dados de Exemplo (Demonstração)</button>
+                            <button class="btn btn-danger" onclick="limparBancoDados()"><i class="fa-solid fa-trash"></i> Resetar Banco de Dados</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Visualização de Transferência -->
+    <div class="modal" id="modal-visualizar">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalhes da Transferência</h3>
+                <button class="btn-close" onclick="fecharModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Conteúdo dinâmico via JS -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="fecharModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificações Toast -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
