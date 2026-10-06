@@ -487,6 +487,7 @@ input:focus, select:focus, textarea:focus {
     background-color: #f8fafc;
 }
 
+/* BADGES */
 .badge {
     padding: 4px 8px;
     border-radius: 12px;
@@ -547,6 +548,7 @@ input:focus, select:focus, textarea:focus {
     margin-top: 20px;
 }
 
+/* MODAL E TOAST */
 .modal {
     display: none;
     position: fixed;
@@ -592,6 +594,8 @@ input:focus, select:focus, textarea:focus {
     z-index: 1001;
     box-shadow: var(--shadow);
 }
+
+/* RESPONSIVIDADE */
 @media (max-width: 992px) {
     .sidebar { position: fixed; left: -260px; height: 100%; }
     .sidebar.open { left: 0; }

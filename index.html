@@ -6,17 +6,21 @@
     <title>LOGIX - Sistema de Controle Logístico Matriz</title>
     <!-- CSS Externos -->
     <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js para Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="app-container">
+        <!-- Sidebar / Menu Lateral -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <i class="fa-solid fa-truck-fast logo-icon"></i>
                 <div class="logo-text">
-                    <h2>G7y</h2>
+                    <h2>LOGIX</h2>
                     <span>Controle Matriz</span>
                 </div>
             </div>
@@ -55,6 +59,8 @@
                 </div>
             </div>
         </aside>
+
+        <!-- Main Content -->
         <main class="main-content">
             <!-- Topbar -->
             <header class="topbar">
@@ -71,6 +77,8 @@
             </header>
 
             <div class="content-body">
+
+                <!-- 1. DASHBOARD PRINCIPAL -->
                 <section id="page-dashboard" class="page-section active">
                     <div class="metrics-grid">
                         <div class="card metric-card">
@@ -109,6 +117,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Cards por Destino -->
                     <div class="destinos-summary-grid">
                         <div class="card destino-card border-rio-preto">
                             <div class="destino-header">
@@ -131,6 +141,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Gráficos -->
                     <div class="charts-grid">
                         <div class="card chart-card">
                             <h3><i class="fa-solid fa-chart-pie"></i> Transferências por Destino</h3>
@@ -658,6 +670,5 @@
     <div id="toast" class="toast"></div>
 
     <script src="script.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>

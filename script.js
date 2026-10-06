@@ -1,7 +1,9 @@
-const SUPABASE_URL = 'https://tsuwhyrzqjsfarfmllfn.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_fb4VQ7iVCvkfY4o9Nfwx_g_rQYnRR3N';
+// BANCO DE DADOS LOCAL (LocalStorage)
+const STORAGE_TRANSFERENCIAS = 'logix_transferencias';
+const STORAGE_MOTORISTAS = 'logix_motoristas';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let transferencias = JSON.parse(localStorage.getItem(STORAGE_TRANSFERENCIAS)) || [];
+let motoristas = JSON.parse(localStorage.getItem(STORAGE_MOTORISTAS)) || [];
 
 // Instâncias de Gráficos
 let chartDestinosObj = null;
